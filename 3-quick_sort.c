@@ -1,4 +1,4 @@
-#include ""sort.h"
+#include "sort.h"
 
 /**
 * swap - swaps two integer
@@ -29,7 +29,7 @@ int lomuto_partition(int *array, int low, int high)
 
 	pivot = array[high];
 	i = low;
-	for (j = low, j < high, j++)
+	for (j = low; j < high; j++)
 	{
 		if (array[j] < pivot)
 		{
