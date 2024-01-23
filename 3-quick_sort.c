@@ -25,15 +25,15 @@ void swap(int *a, int *b)
 */
 int lomuto_partition(int *array, int low, int high)
 {
-	int pivot, i, j;
+	int *pivot, i, j;
 
-	pivot = array[high];
-	i = low;
-	for (j = low; j < high; j++)
+	pivot = array + high;
+	for (i = j = low; j < high; j++)
 	{
-		if (array[j] < pivot)
+		if (array[j] < *pivot)
 		{
 			swap(&array[i], &array[j]);
+			print_array(array, high + 1);
 			i++;
 		}
 	}
