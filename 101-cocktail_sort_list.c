@@ -8,6 +8,8 @@
  */
 void swap_nodes(listint_t **list, listint_t *node1, listint_t *node2)
 {
+	if (!node1 || !node2)
+		return;
 	if (node1->prev)
 		node1->prev->next = node2;
 	else
@@ -26,33 +28,44 @@ void swap_nodes(listint_t **list, listint_t *node1, listint_t *node2)
  */
 void cocktail_sort_list(listint_t **list)
 {
-	int swapped;
-	listint_t *current;
-
-	if (list == NULL || *list == NULL)
+	if (!list || !(*list) || !(*list)->next)
 		return;
+	int shake_range = 1000000;
+	listint_t *current_node = *list;
+
 	do {
-		swapped = 0;
-		for (current = *list; current->next; current = current->next)
+		bool forward_swapped = false;
+		bool backward_swapped = false;
+		int num_checks;
+
+		for (num_checks = 0;
+				current_node->next && num_checks < shake_range; num_checks++)
 		{
-			if (current->n > current->next->n)
+			if (current_node->next->n < current_node->n)
 			{
-				swap_nodes(list, current, current->next);
-				print_list(*list);
-				swapped = 1;
+				swap_nodes(list, current_node, current_node->next);
+				forward_swapped = true;
 			}
+			else
+				current_node = current_node->next;
 		}
-		if (!swapped)
-			break;
-		swapped = 0;
-		for (; current->prev; current = current->prev)
+		if (!current_node->next)
+			shake_range = num_checks;
+		if (forward_swapped)
+			current_node = current_node->prev;
+		shake_range--;
+		for (num_checks = 0;
+				current_node->prev && num_checks < shake_range; num_checks++)
 		{
-			if (current->n < current->prev->n)
+			if (current_node->n < current_node->prev->n)
 			{
-				swap_nodes(list, current->prev, current);
-				print_list(*list);
-				swapped = 1;
+				swap_nodes(list, current_node->prev, current_node);
+				backward_swapped = true;
 			}
+			else
+				current_node = current_node->prev;
 		}
-	} while (swapped);
+		if (backward_swapped)
+			current_node = current_node->next;
+	} while (forward_swapped || backward_swapped);
 }
